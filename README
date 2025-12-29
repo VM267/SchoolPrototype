@@ -1,0 +1,14 @@
+# Student Support AI Prototype
+
+## Problem
+Helping high school staff identify students who may benefit from supportive check-ins, using ethical, synthetic, and school-level data.
+
+## Scope
+- Synthetic student data only
+- No protected categories
+- Probabilistic support-likelihood scoring
+- Staff-in-the-loop system, no automated action
+
+## Demo Instructions
+- Install dependencies: `pip install -r requirements.txt`
+- Run Streamlit: `streamlit run app/Home.py`
