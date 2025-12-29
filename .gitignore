@@ -1,1 +1,16 @@
-// nothing
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.env
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Data
+data/*.csv
+data/*.parquet
+
+# Configs
+config.yaml
