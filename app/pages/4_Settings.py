@@ -1,45 +1,49 @@
 import streamlit as st
-from app.utils import ensure_session_defaults
-from src.scoring.weights import validate_weights
 
 st.set_page_config(page_title="Settings", layout="wide")
-ensure_session_defaults()
+st.title("Settings")
 
-st.title("4) Settings")
+# Initialize config in session_state
+if "config" not in st.session_state:
+    st.session_state["config"] = {
+        "threshold": 75,
+        "decay_rate": 0.85,
+        "weights": {
+            "grades": 0.25,
+            "tardies": 0.15,
+            "absences": 0.20,
+            "discipline_events": 0.25,
+            "truancy_days": 0.15,
+        }
+    }
 
-st.subheader("Threshold (tunable)")
-st.session_state.threshold = st.slider(
-    "Supportive check-in threshold (0–100)",
-    min_value=0.0,
-    max_value=100.0,
-    value=float(st.session_state.threshold),
-    step=1.0
+cfg = st.session_state["config"]
+w = cfg["weights"]
+
+st.subheader("Support Signal Threshold")
+cfg["threshold"] = st.slider("Review if Support Signal ≥", 0, 100, int(cfg["threshold"]))
+
+st.subheader("Recency Decay")
+cfg["decay_rate"] = st.slider(
+    "Decay rate (higher = recent weeks matter more)",
+    0.50, 0.99, float(cfg["decay_rate"]), step=0.01
 )
 
-st.subheader("Weights (human-defined, tunable)")
-w = st.session_state.weights.copy()
+st.subheader("Weights (Human-defined)")
+st.write("**Note:** For clean interpretation, aim for weights that add up to **1.00**.")
 
-w["grades"] = st.slider("grades weight", 0.05, 0.50, float(w["grades"]), 0.01)
-w["absences"] = st.slider("absences weight", 0.05, 0.50, float(w["absences"]), 0.01)
-w["tardies"] = st.slider("tardies weight", 0.05, 0.50, float(w["tardies"]), 0.01)
-w["discipline_events"] = st.slider("discipline_events weight", 0.05, 0.50, float(w["discipline_events"]), 0.01)
-w["truancy_days"] = st.slider("truancy_days weight", 0.05, 0.50, float(w["truancy_days"]), 0.01)
+w["grades"] = st.slider("Grades (low grades increase signal)", 0.0, 1.0, float(w["grades"]), step=0.01)
+w["tardies"] = st.slider("Tardies", 0.0, 1.0, float(w["tardies"]), step=0.01)
+w["absences"] = st.slider("Absences", 0.0, 1.0, float(w["absences"]), step=0.01)
+w["discipline_events"] = st.slider("Discipline events", 0.0, 1.0, float(w["discipline_events"]), step=0.01)
+w["truancy_days"] = st.slider("Truancy days", 0.0, 1.0, float(w["truancy_days"]), step=0.01)
 
-# Normalize to sum=1 automatically
-total = sum(w.values())
-w = {k: v / total for k, v in w.items()}
+weight_sum = sum(float(v) for v in w.values())
+if abs(weight_sum - 1.0) < 0.01:
+    st.success(f"Weights sum to **{weight_sum:.2f}** ✅")
+else:
+    st.warning(f"Weights currently sum to **{weight_sum:.2f}**. Try adjusting them to total **1.00** for clarity.")
 
-try:
-    validate_weights(w)
-    st.success("Weights are valid (sum to 1.0 and bounded). Saved to session.")
-    st.session_state.weights = w
-except Exception as e:
-    st.error(f"Weights invalid: {e}")
-
-st.subheader("Recency decay")
-st.session_state.decay_rate = st.slider(
-    "Decay rate (placeholder until fully wired into features)",
-    0.50, 0.99, float(st.session_state.decay_rate), 0.01
-)
-
-st.caption("In this prototype, weights and thresholds are transparent and tunable by staff, not automatically learned.")
+st.divider()
+st.write("Current config (this is what scoring will use):")
+st.json(st.session_state["config"])
