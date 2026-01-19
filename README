@@ -1,202 +1,210 @@
-# Supportive Check-In Signal Prototype
-
-This repository contains an interactive prototype designed to help school staff, reviewers, and policymakers **explore how AI can assist with early, human-led student support** in a responsible way.
-
-This README is written primarily to explain **how to use the system effectively**, how to interpret what you see, and why certain design choices matter.
-
----
-
-## What this system is (briefly)
-
-The system generates a **Support Signal** — a number from 0 to 100 — that indicates when a student’s *recent patterns* may warrant a **human-led supportive check-in**.
-
-It does **not**:
-- Predict student outcomes
-- Rank students
-- Automate decisions
-- Trigger discipline
-- Replace human judgment
-
-The system exists to **surface attention**, not to decide action.
-
----
-
-## Getting started
-
-### Run the app locally
-```bash
-pip install -r requirements.txt
-streamlit run app/Home.py
-
-When the app opens, start on the Home page and read the short disclaimers. These explain the limits of the system and how it should be interpreted.
-
-When the app opens, start on the Home page and read the short disclaimers. These explain the limits of the system and how it should be interpreted.
-
-**Step 1: Select or upload a student**
-Go to Upload or Select Student.
-You may:
-Upload a synthetic CSV, or
-Select one of the included sample students
+Supportive Check-In Signal Prototype
+This repository contains an interactive prototype designed to help school staff, reviewers, and policymakers explore how AI can support early, human-led student check-ins in a responsible, transparent, and ethical way.
+Rather than predicting outcomes or automating decisions, this project demonstrates how carefully constrained AI systems can surface attention while preserving human judgment, fairness, and interpretability.
+Core contribution
+The primary contribution of this project is not a predictive model, but a design philosophy.
+This system intentionally limits what AI is allowed to do in order to:
+avoid harm from biased or opaque predictions,
 
 
-All student data in this prototype is synthetic.
- The system is intentionally designed so it could operate without real student data.
-
-**Step 2: Choose a context school (this is important)**
-Before viewing a student report, select a context school.
-The context school:
-Does not change the student’s data
-Does not label the student
-Does not compare the student to peers
+preserve human decision-making authority,
 
 
-Instead, it provides contextual benchmarks that help interpret patterns.
-How to think about this
-Choosing a school is like changing the lens you’re looking through.
-Ask questions such as:
-How does this student’s pattern look in a high-performing environment?
+and remain explainable, auditable, and ethically defensible.
 
 
-How does it look in a higher-need environment?
+It is designed as a model for responsible educational AI, not an early-warning or surveillance system.
+What this system is
+The system generates a Support Signal, a number from 0 to 100, indicating when a student’s recent patterns may warrant a human-led supportive check-in.
+The signal is meant to surface attention, not to decide action.
+What this system is not
+This system does not:
+predict student outcomes,
 
 
-How should expectations shift based on context?
+rank or label students,
 
 
-This is meant to demonstrate that context matters, and that AI signals should never be interpreted in isolation.
-
-*****Step 3: Read the student report*****
-When you open a student report, focus on three things.
-
-1. Support Signal (0–100)
-This number reflects how strongly the student’s recent patterns stand out given:
-Signal weights
-Recency of data
-Selected school context
+automate decisions,
 
 
-A higher number means more reason for human attention, not higher risk or severity.
+trigger discipline,
 
-2. Threshold indicator
-The default threshold is 75.
-Above threshold → Support check-in suggested
-Below threshold → No check-in suggested
+
+replace educators, counselors, or human judgment.
+
+
+Using the system in any of these ways would violate its design intent.
+How it works at a high level
+Student data (synthetic only)
+The system analyzes synthetic student records that include metrics such as grades, absences, tardies, discipline events, and truancy days.
+
+
+Recency-weighted signals
+More recent data is weighted more heavily than older data, reflecting how support needs change over time.
+
+
+Contextual interpretation using schools
+A selected school provides contextual benchmarks, not comparisons or labels.
+ Choosing a school changes how patterns are interpreted, not the student’s data itself.
+
+
+Human-controlled thresholds and weights
+Humans determine:
+
+
+how conservative the system is,
+
+
+which metrics matter more,
+
+
+and when a check-in is suggested.
+
+
+Explainable outputs
+The system shows which indicators contributed most to the signal so reviewers can clearly understand why attention is being surfaced.
+
+
+Interpreting the Support Signal
+A higher Support Signal means there is more reason for human attention, not higher risk or severity.
+
+
+A lower Support Signal does not mean a student is “fine.” It means the system does not currently see a strong reason to prompt review.
+
+
+The signal should always be interpreted alongside:
+
+
+human judgment,
+
+
+local knowledge,
+
+
+and follow-up conversations.
+
+
+The signal supports humans. It does not override them.
+Thresholds and weights
+Threshold
+Default threshold: 75
+
+
+Above threshold: support check-in suggested
+
+
+Below threshold: no check-in suggested
 
 
 The threshold exists to help staff manage attention and workload.
- It is intentionally configurable and controlled by humans, not AI.
-
-3. Contributing indicators
-Below the score, you will see the top contributing indicators.
-These explain:
-Which metrics influenced the signal most
-Whether changes were recent or sustained
-
-
-Why the signal increased or decreased
-
-
-This section exists so a reviewer can clearly say:
-“This signal is mainly driven by recent absences, not discipline.”
-Explainability is a core feature, not an add-on.
-
-*****Step 4: Use the Settings page responsibly*****
-The Settings page exists so humans remain in control of interpretation.
-
+There is no universally “correct” value. It reflects staff capacity, philosophy, and context.
 Weights
-Weights determine the relative importance of each metric.
-You might adjust weights if:
-Your school wants to prioritize attendance over grades
-Discipline policies recently changed
-Certain metrics are temporarily unreliable
-Staff want earlier signals for specific concerns
+Weights control the relative importance of each metric.
 
 
-Important rule:
- Weights should add up to 1.
- This keeps the Support Signal interpretable and prevents any single metric from dominating unintentionally.
-
-Threshold
-The threshold controls how conservative the system is.
-Higher threshold → fewer signals, fewer false positives
-Lower threshold → more signals, earlier review
+Weights are human-set and must sum to 1 to preserve interpretability.
 
 
-There is no “correct” value.
- This choice reflects staff capacity, philosophy, and context.
-
-Ethics indicators (what to watch for)
-Throughout the app, you will see indicators showing:
-What data was used
-What data was explicitly blocked
-When protected attributes were detected and removed
+Weights might be adjusted when:
+attendance becomes a priority,
 
 
-Protected attributes such as race, gender, income, disability status, and proxies are explicitly rejected at ingestion.
-These indicators exist so reviewers can verify ethics are enforced, not assumed.
-
-How to use this system well
-This prototype works best when used as:
-A prioritization aid
+grading practices change,
 
 
-A conversation starter
+certain metrics become unreliable,
 
 
-A transparency demonstration
+staff want earlier or later signals.
 
 
-A support-planning tool
+Ethics and safeguards
+Ethics are enforced at the system level, not assumed.
+Protected attributes such as race, gender, income, disability status, and known proxies are explicitly rejected at ingestion.
 
 
-It should always be paired with:
-Human judgment
+The system does not attempt bias correction using protected attributes.
 
 
-Local knowledge
+Indicators throughout the app show:
 
 
-Follow-up conversations
+what data was used,
 
 
-
-How this system should NOT be used
-This system should not be used to:
-Make automated decisions
+what data was blocked,
 
 
-Rank or label students
+when protected attributes were detected and removed.
 
 
-Predict future outcomes
+These safeguards exist so reviewers can verify ethical constraints are enforced, not merely claimed.
+Evaluation philosophy
+Because the system is intentionally non-predictive, success is not measured by predictive accuracy.
+Instead, evaluation focuses on:
+logical consistency,
 
 
-Trigger disciplinary action
+interpretability,
 
 
-Replace counselors or educators
+transparency,
 
 
-Using it that way would violate its design intent.
+and alignment with ethical constraints.
 
-A note on interpretation
-A higher Support Signal does not mean a student is “bad.”
- It means their recent patterns differ enough to warrant attention.
-A lower Support Signal does not mean a student is “fine.”
- It means the system does not currently see a strong reason to prompt review.
-The signal exists to support humans, not override them.
 
+Synthetic student profiles with distinct patterns are used to verify that:
+similar patterns produce consistent signals,
+
+
+protected attributes never influence outputs,
+
+
+and explanations remain clear and stable.
+
+
+Getting started
+Run the app locally
+pip install -r requirements.txt
+streamlit run app/Home.py
+
+When the app opens, start on the Home page and read the disclaimers. They explain system limits and proper interpretation.
+All student data included in this prototype is synthetic.
+The system is intentionally designed so it could operate without real student data.
+How this system should be used
+This prototype works best as:
+a prioritization aid,
+
+
+a conversation starter,
+
+
+a transparency demonstration,
+
+
+a support-planning tool.
+
+
+It should always be paired with human judgment and follow-up.
 Why this prototype exists
 This project is intentionally limited.
-Those limits allow the system to be:
-Explainable
-Auditable
-Defensible
-Aligned with ethical constraints
-Trusted by the people it affects
+Those limits make the system:
+explainable,
 
 
-The goal is not to show how powerful AI can be, but how carefully it can be applied. If AI is going to be used in schools, it should look more like this.
+auditable,
 
 
+defensible,
 
+
+ethically aligned,
+
+
+and trustworthy to the people it affects.
+
+
+The goal is not to show how powerful AI can be, but how carefully it can be applied.
+If AI is used in schools, it should look more like this.
